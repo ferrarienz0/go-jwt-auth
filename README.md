@@ -1,4 +1,4 @@
-# Go-Auth
+# Go-JWT-Auth
 
 Simplify JWT handling in Go. Based on github.com/dgrijalva/jwt-go
 
