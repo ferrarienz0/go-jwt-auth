@@ -1,10 +1,8 @@
-package auth
+package jwtAuth
 
 import (
 	"reflect"
 	"testing"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 // Should create a token with a provided set
@@ -37,9 +35,9 @@ func TestShouldCreateTokenWithCustomSigninMethod(t *testing.T) {
 
 	secret := "test"
 
-	token, tokenString, err := CreateTokenWithClaims(claims, secret, jwt.SigningMethodHS512)
+	token, tokenString, err := CreateTokenWithClaims(claims, secret, HS512)
 
-	tokenHasTheSameSigninMethod := validateTokenSignInMethod(*token, jwt.SigningMethodHS512)
+	tokenHasTheSameSigninMethod := validateTokenSignInMethod(*token, HS512)
 
 	if tokenString == "" || token == nil {
 		t.Errorf("Token was empty")
@@ -48,10 +46,10 @@ func TestShouldCreateTokenWithCustomSigninMethod(t *testing.T) {
 	}
 
 	if !tokenHasTheSameSigninMethod {
-		t.Errorf("Token had incorred signing method, expected %#v, got %#v", jwt.SigningMethodHS512, token.Method)
+		t.Errorf("Token had incorred signing method, expected %#v, got %#v", HS512, token.Method)
 	}
 
-	t.Logf("Token had the correct signing method, expected: %#v, got: %#v", jwt.SigningMethodHS512, token.Method)
+	t.Logf("Token had the correct signing method, expected: %#v, got: %#v", HS512, token.Method)
 
 }
 
@@ -78,6 +76,32 @@ func TestShouldParseTokenStringAndGetClaims(t *testing.T) {
 		t.Logf("Token was successfully parsed and got correct claims: %#v", claims)
 	} else {
 		t.Errorf("Parsing was successfull but got incorrect claims")
+	}
+}
+
+// Should parse a token string and get it's claims
+func TestShouldParseTokenStringAndGetClaimsWithCustomSigning(t *testing.T) {
+	originalClaims := map[string]interface{}{
+		"_id":  "someid",
+		"name": "test",
+	}
+
+	secret := "test"
+
+	_, tokenString, _ := CreateTokenWithClaims(originalClaims, secret, HS384)
+
+	claims, err := ParseTokenAndGetClaims(tokenString, secret, HS384)
+
+	if claims == nil {
+		t.Errorf("Claims was empty")
+	} else if err != nil {
+		t.Errorf("A error happened during parsing: %#v", err)
+	}
+
+	if reflect.DeepEqual(claims, originalClaims) {
+		t.Logf("Token was successfully parsed and got correct claims: %#v", claims)
+	} else {
+		t.Errorf("Parsing was successfull but got incorrect claims: %#v", claims)
 	}
 }
 
@@ -114,7 +138,7 @@ func TestShouldReturnErrorWhenWrongSigningMethod(t *testing.T) {
 
 	_, tokenString, _ := CreateTokenWithClaims(originalClaims, secret)
 
-	_, err := ParseTokenAndGetClaims(tokenString, secret, jwt.SigningMethodES384)
+	_, err := ParseTokenAndGetClaims(tokenString, secret, HS384)
 
 	if err == nil {
 		t.Errorf("No error was returned when given a incorrect secret")

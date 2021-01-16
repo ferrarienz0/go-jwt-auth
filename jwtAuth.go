@@ -1,10 +1,19 @@
-package auth
+package jwtAuth
 
 import (
 	"errors"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
+
+// HS256 specifc instances for HS256 and company
+var HS256 jwt.SigningMethod = jwt.SigningMethodHS256
+
+// HS384 specific instances for HS384 and company
+var HS384 jwt.SigningMethod = jwt.SigningMethodHS384
+
+// HS512 specific instances for HS512 and company
+var HS512 jwt.SigningMethod = jwt.SigningMethodHS512
 
 func chooseDefaultSignInMethod(signInMethod []jwt.SigningMethod) jwt.SigningMethod {
 	var selectedSigningMethod = jwt.SigningMethod(jwt.SigningMethodHS256)
