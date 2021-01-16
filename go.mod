@@ -1,4 +1,4 @@
-module auth
+module jwtAuth
 
 go 1.15
 
