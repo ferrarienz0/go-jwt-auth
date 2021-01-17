@@ -7,7 +7,7 @@ Simplify JWT handling in Go. Based on [jwt-go](github.com/dgrijalva/jwt-go)
 Add this import to your code:
 
 ```go
-jwtAuth import "github.com/ferrarienz0/go-auth"
+jwtAuth import "github.com/ferrarienz0/go-jwt-auth"
 ```
 
 To provide intelissense and download the module run on terminal:
